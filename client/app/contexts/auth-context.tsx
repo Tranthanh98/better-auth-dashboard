@@ -5,7 +5,13 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { signIn, signOut, useSession, type User } from "../lib/auth-client";
+import {
+  authClient,
+  signIn,
+  signOut,
+  useSession,
+  type User,
+} from "../lib/auth-client";
 
 interface AuthContextType {
   user: User | null;
@@ -44,8 +50,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return false;
       }
 
+      const session = await authClient.getSession();
+
       // Check if user is admin
-      const userData = result.data?.user as User | undefined;
+      const userData = session?.data?.user as User | undefined;
+
       if (userData?.role !== "admin") {
         await signOut();
         setError("Access denied. Admin privileges required.");
