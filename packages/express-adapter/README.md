@@ -1,10 +1,19 @@
 # better-auth-admin
 
-Express adapter for [Better Auth](https://better-auth.com) Admin Dashboard.
+Admin Dashboard for [Better Auth](https://better-auth.com) - Manage users, organizations, and sessions with a beautiful, modern UI.
 
-Easily add a beautiful admin dashboard to manage users, organizations, and sessions in your Better Auth powered application.
+![License](https://img.shields.io/npm/l/better-auth-admin)
+![NPM Version](https://img.shields.io/npm/v/better-auth-admin)
 
-## Installation
+## ✨ Features
+
+- 👥 **User Management**: View, create, edit, ban/unban users
+- 🏢 **Organization Management**: Manage organizations, members, and invitations
+- 🔐 **Session Management**: View and revoke user sessions
+- 🎨 **Modern UI**: Built with React and Tailwind CSS
+- 🔒 **Secure**: Only accessible to authenticated admin users
+
+## 📦 Installation
 
 ```bash
 npm install better-auth-admin
@@ -14,13 +23,134 @@ pnpm add better-auth-admin
 yarn add better-auth-admin
 ```
 
-## Quick Start
+## 🚀 Setup Guide
+
+### Step 1: Install and Configure Better Auth Admin Plugin
+
+First, make sure you have Better Auth set up in your project. Then configure the **admin plugin**:
 
 ```typescript
+// auth.ts
+import { betterAuth } from "better-auth";
+import { admin, organization } from "better-auth/plugins";
+
+export const auth = betterAuth({
+  database: {
+    // your database config
+  },
+  emailAndPassword: {
+    enabled: true,
+  },
+  plugins: [
+    admin({
+      defaultRole: "user",
+      adminRole: "admin",
+      // Add your admin user ID here (see Step 3)
+      adminUserIds: ["your-admin-user-id"],
+    }),
+    organization(), // Optional: enable organization management
+  ],
+});
+```
+
+### Step 2: Create Your Admin Account
+
+Create a user account using Better Auth's standard signup API:
+
+```typescript
+// Using the client SDK
+import { createAuthClient } from "better-auth/client";
+
+const authClient = createAuthClient({
+  baseURL: "http://localhost:3000",
+});
+
+// Sign up a new account
+await authClient.signUp.email({
+  email: "admin@example.com",
+  password: "your-secure-password",
+  name: "Admin User",
+});
+```
+
+Or via API request:
+
+```bash
+curl -X POST http://localhost:3000/api/auth/sign-up/email \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@example.com","password":"your-secure-password","name":"Admin User"}'
+```
+
+### Step 3: Update User Role in Database
+
+After creating your account, you need to set the user's role to "admin" in your database:
+
+**For SQLite/PostgreSQL/MySQL:**
+
+```sql
+-- Find your user ID first
+SELECT id, email, role FROM user;
+
+-- Update the role to admin
+UPDATE user SET role = 'admin' WHERE email = 'admin@example.com';
+```
+
+**Using Drizzle ORM:**
+
+```typescript
+import { db } from "./db";
+import { user } from "./db/schema";
+import { eq } from "drizzle-orm";
+
+await db
+  .update(user)
+  .set({ role: "admin" })
+  .where(eq(user.email, "admin@example.com"));
+```
+
+**Using Prisma:**
+
+```typescript
+await prisma.user.update({
+  where: { email: "admin@example.com" },
+  data: { role: "admin" },
+});
+```
+
+### Step 4: Add Admin User ID to Config
+
+Copy the user ID from Step 3 and add it to your Better Auth config:
+
+```typescript
+// auth.ts
+export const auth = betterAuth({
+  // ... other config
+  plugins: [
+    admin({
+      defaultRole: "user",
+      adminRole: "admin",
+      adminUserIds: ["QRWWFp9Vs20Na7sgKJbazYvpcaiK3Ane"], // Your admin user ID
+    }),
+    // ...
+  ],
+});
+```
+
+> **Note:** The `adminUserIds` array allows multiple admin users. These users will always have admin access regardless of the database role.
+
+### Step 5: Mount the Dashboard
+
+Add the admin dashboard to your Express server:
+
+```typescript
+// server.ts
 import express from "express";
 import { betterAuthAdmin } from "better-auth-admin";
 
 const app = express();
+
+// Your Better Auth API handler
+app.all("/api/auth/*", (req, res) => auth.handler(req, res));
 
 // Mount admin dashboard at /admin
 app.use(
@@ -30,67 +160,96 @@ app.use(
   })
 );
 
-app.listen(8080, () => {
-  console.log("Admin dashboard available at http://localhost:8080/admin");
+app.listen(3000, () => {
+  console.log("Server running at http://localhost:3000");
+  console.log("Admin dashboard at http://localhost:3000/admin");
 });
 ```
 
-## Configuration Options
+## 📖 Configuration Options
 
 | Option    | Type     | Required | Default               | Description                             |
 | --------- | -------- | -------- | --------------------- | --------------------------------------- |
 | `authUrl` | `string` | ✅       | -                     | The base URL of your Better Auth server |
 | `title`   | `string` | ❌       | `"Better Auth Admin"` | Custom title for the dashboard          |
 
-## Example with Better Auth
+## 📂 Complete Example
+
+Here's a complete example with Express, Drizzle, and SQLite:
 
 ```typescript
+// src/index.ts
 import express from "express";
 import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { admin, organization } from "better-auth/plugins";
 import { betterAuthAdmin } from "better-auth-admin";
+import { db, schema } from "./db";
 
-const app = express();
-
-// Your Better Auth configuration
+// Configure Better Auth
 const auth = betterAuth({
-  // ... your config
+  database: drizzleAdapter(db, {
+    provider: "sqlite",
+    schema,
+  }),
+  emailAndPassword: {
+    enabled: true,
+  },
+  plugins: [
+    admin({
+      defaultRole: "user",
+      adminRole: "admin",
+      adminUserIds: ["your-admin-user-id"],
+    }),
+    organization(),
+  ],
 });
 
-// Mount Better Auth API
+// Create Express app
+const app = express();
+app.use(express.json());
+
+// Better Auth API handler
 app.all("/api/auth/*", (req, res) => auth.handler(req, res));
 
-// Mount Admin Dashboard
+// Mount admin dashboard
 app.use(
   "/admin",
   betterAuthAdmin({
-    authUrl: "http://localhost:3000",
+    authUrl: process.env.AUTH_URL || "http://localhost:3000",
+    title: "My App Admin",
   })
 );
 
-app.listen(3000);
+// Start server
+app.listen(3000, () => {
+  console.log("🚀 Server: http://localhost:3000");
+  console.log("📊 Admin:  http://localhost:3000/admin");
+});
 ```
 
-## Standalone Deployment
+## 🔐 Security Notes
 
-If you prefer to deploy the admin dashboard separately (e.g., on Vercel, Netlify, or your own server), you can use the React client directly:
+- The dashboard is protected by Better Auth's admin plugin
+- Only users with the "admin" role OR listed in `adminUserIds` can access admin features
+- The dashboard uses cookies for authentication - make sure your `trustedOrigins` is properly configured
+- For production, always use HTTPS and configure CORS properly
 
-1. Clone the repository
-2. Set environment variable: `VITE_AUTH_API_URL=https://your-auth-server.com`
-3. Build and deploy: `pnpm build`
+## 🛠️ Requirements
 
-## Features
-
-- 👥 **User Management**: View, create, edit, ban/unban users
-- 🏢 **Organization Management**: Manage organizations, members, and invitations
-- 🔐 **Session Management**: View and revoke user sessions
-- 🎨 **Modern UI**: Built with React and Tailwind CSS
-- 🔒 **Secure**: Only accessible to admin users
-
-## Requirements
-
+- Node.js 18+
 - Express.js 4.x or 5.x
-- Better Auth server with admin plugin enabled
+- Better Auth with admin plugin enabled
 
-## License
+## 📄 License
 
 MIT
+
+## 🤝 Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request.
+
+## 📞 Support
+
+- [GitHub Issues](https://github.com/Tranthanh98/better-auth-dashboard/issues)
+- [Better Auth Documentation](https://better-auth.com)

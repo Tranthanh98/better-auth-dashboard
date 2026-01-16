@@ -1,7 +1,7 @@
 {
   "name": "better-auth-admin",
   "version": "0.1.0",
-  "description": "Express adapter for Better Auth Admin Dashboard",
+  "description": "Admin Dashboard for Better Auth - Manage users, organizations, and sessions",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -18,16 +18,27 @@
   ],
   "scripts": {
     "build": "tsup src/index.ts --format esm --dts --clean",
-    "build:client": "cd ../../client && pnpm build && cp -r build/client ../../packages/express-adapter/client",
+    "build:client": "cd ../../client && pnpm build && node ../packages/express-adapter/scripts/copy-client.js",
     "prepublishOnly": "pnpm build && pnpm build:client",
     "dev": "tsup src/index.ts --format esm --dts --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Tranthanh98/better-auth-dashboard"
+  },
+  "homepage": "https://github.com/Tranthanh98/better-auth-dashboard#readme",
+  "bugs": {
+    "url": "https://github.com/Tranthanh98/better-auth-dashboard/issues"
   },
   "keywords": [
     "better-auth",
     "admin",
     "dashboard",
     "express",
-    "middleware"
+    "middleware",
+    "user-management",
+    "organization-management",
+    "session-management"
   ],
   "author": "",
   "license": "MIT",
