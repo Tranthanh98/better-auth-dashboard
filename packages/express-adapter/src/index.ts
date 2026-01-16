@@ -1,7 +1,6 @@
 import { Router, static as expressStatic } from "express";
 import { readFileSync } from "fs";
-import { dirname, join } from "path";
-import { fileURLToPath } from "url";
+import { join } from "path";
 
 /**
  * Configuration options for Better Auth Admin Dashboard
@@ -52,8 +51,6 @@ export function betterAuthAdmin(options: BetterAuthAdminOptions): Router {
   const router = Router();
 
   // Resolve client directory path
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = dirname(__filename);
   const clientPath = join(__dirname, "..", "client");
 
   // Runtime config to inject

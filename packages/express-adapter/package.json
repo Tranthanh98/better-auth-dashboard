@@ -1,6 +1,6 @@
 {
   "name": "better-auth-admin",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Admin Dashboard for Better Auth - Manage users, organizations, and sessions",
   "type": "module",
   "main": "./dist/index.js",
@@ -8,9 +8,9 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs"
     }
   },
   "files": [
@@ -18,10 +18,10 @@
     "client"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean --shims",
     "build:client": "cd ../../client && pnpm build && node ../packages/express-adapter/scripts/copy-client.js",
     "prepublishOnly": "pnpm build && pnpm build:client",
-    "dev": "tsup src/index.ts --format esm --dts --watch"
+    "dev": "tsup src/index.ts --format esm --dts --watch --shims"
   },
   "repository": {
     "type": "git",
