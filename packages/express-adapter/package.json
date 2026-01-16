@@ -9,6 +9,7 @@
   "exports": {
     ".": {
       "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "types": "./dist/index.d.ts"
     }
   },
@@ -17,7 +18,7 @@
     "client"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts --clean",
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
     "build:client": "cd ../../client && pnpm build && node ../packages/express-adapter/scripts/copy-client.js",
     "prepublishOnly": "pnpm build && pnpm build:client",
     "dev": "tsup src/index.ts --format esm --dts --watch"
