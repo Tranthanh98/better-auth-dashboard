@@ -4,11 +4,9 @@
   "description": "Admin dashboard for Better Auth",
   "private": true,
   "scripts": {
-    "dev": "pnpm --filter client dev",
-    "build": "pnpm --filter client build",
-    "build:adapter": "pnpm --filter better-auth-admin build",
-    "build:all": "pnpm build && pnpm build:adapter",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "client:dev": "pnpm --filter client dev",
+    "server:dev": "pnpm --filter client build:spa && pnpm --filter better-auth-admin build && node packages/express-adapter/scripts/copy-client.js && pnpm --filter server dev",
+    "package:publish": "pnpm --filter client build:spa && node packages/express-adapter/scripts/copy-client.js && pnpm --filter better-auth-admin publish --access public"
   },
   "keywords": [
     "better-auth",

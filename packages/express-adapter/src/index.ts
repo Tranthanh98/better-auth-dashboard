@@ -106,7 +106,8 @@ export function betterAuthAdmin(options: BetterAuthAdminOptions): Router {
   );
 
   // SPA fallback - serve modified index.html for all routes
-  router.get("*", (req, res) => {
+  // Using "{*splat}" syntax for Express 5 compatibility
+  router.get("/{*splat}", (req, res) => {
     res.setHeader("Content-Type", "text/html");
     res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
     res.send(getIndexHtml());

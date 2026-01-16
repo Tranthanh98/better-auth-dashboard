@@ -3,7 +3,7 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const source = join(__dirname, "../../../client/build/client");
+const source = join(__dirname, "../../../client/build-spa/client");
 const destination = join(__dirname, "../client");
 
 // Remove existing client folder
