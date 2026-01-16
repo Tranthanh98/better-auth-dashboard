@@ -5,6 +5,31 @@ Admin Dashboard for [Better Auth](https://better-auth.com) - Manage users, organ
 ![License](https://img.shields.io/npm/l/better-auth-admin)
 ![NPM Version](https://img.shields.io/npm/v/better-auth-admin)
 
+## 🚀 Quick Start
+
+Add an admin dashboard to your Express app in **3 lines of code**:
+
+```typescript
+import express from "express";
+import { betterAuthAdmin } from "better-auth-admin";
+
+const app = express();
+
+app.use(
+  "/admin",
+  betterAuthAdmin({
+    authUrl: "http://localhost:3000",
+  })
+);
+
+app.listen(3000);
+// Admin dashboard: http://localhost:3000/admin 🎉
+```
+
+That's it! Your admin dashboard is now available at `/admin`.
+
+---
+
 ## ✨ Features
 
 - 👥 **User Management**: View, create, edit, ban/unban users
@@ -23,9 +48,13 @@ pnpm add better-auth-admin
 yarn add better-auth-admin
 ```
 
-## 🚀 Setup Guide
+---
 
-### Step 1: Install and Configure Better Auth Admin Plugin
+## 📋 Prerequisites & Setup
+
+Before using the dashboard, you need to configure Better Auth with the admin plugin.
+
+### Step 1: Configure Better Auth Admin Plugin
 
 First, make sure you have Better Auth set up in your project. Then configure the **admin plugin**:
 
