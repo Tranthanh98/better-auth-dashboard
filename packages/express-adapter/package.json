@@ -1,6 +1,6 @@
 {
   "name": "better-auth-admin",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Admin Dashboard for Better Auth - Manage users, organizations, and sessions",
   "type": "module",
   "main": "./dist/index.js",
