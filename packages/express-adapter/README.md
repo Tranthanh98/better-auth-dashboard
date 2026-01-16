@@ -28,6 +28,12 @@ app.listen(3000);
 
 That's it! Your admin dashboard is now available at `/admin`.
 
+### UI
+
+![User management](images/image-1.png)
+![User detail](images/image-3.png)
+![Orgganisation management](images/image-2.png)
+
 ---
 
 ## ✨ Features

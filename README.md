@@ -41,6 +41,12 @@ app.listen(3000);
 
 That's it! 🎉
 
+### UI
+
+![User management](image-1.png)
+![User detail](image-3.png)
+![Orgganisation management](image-2.png)
+
 For complete setup guide (including Better Auth configuration), see the [package documentation](./packages/express-adapter/README.md).
 
 ---

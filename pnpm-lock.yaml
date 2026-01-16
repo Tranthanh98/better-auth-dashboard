@@ -87,8 +87,8 @@ importers:
         specifier: ^1.4.13
         version: 1.4.13(better-sqlite3@12.6.0)(drizzle-kit@0.31.8)(drizzle-orm@0.45.1(@types/better-sqlite3@7.6.13)(better-sqlite3@12.6.0)(kysely@0.28.9))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       better-auth-admin:
-        specifier: workspace:*
-        version: link:../packages/express-adapter
+        specifier: ^0.1.2
+        version: 0.1.2(express@5.2.1)
       better-sqlite3:
         specifier: ^12.6.0
         version: 12.6.0
@@ -1137,6 +1137,11 @@ packages:
   basic-auth@2.0.1:
     resolution: {integrity: sha512-NF+epuEdnUYVlGuhaxbbq+dvJttwLnGY+YixlXlME5KpQ5W3CnXA5cVTneY3SPbPDRkcjMbifrwmFYcClgOZeg==}
     engines: {node: '>= 0.8'}
+
+  better-auth-admin@0.1.2:
+    resolution: {integrity: sha512-kFzjIrRDD+jlA8SYbbROHIqW8aHP/BBeoMi/wgnECGspR75AmynNBh7/dQm5fAmYUyLkFdcZdejou9kWL546nQ==}
+    peerDependencies:
+      express: ^4.18.0 || ^5.0.0
 
   better-auth@1.4.13:
     resolution: {integrity: sha512-frGQmYT0rglidLpx91SP9n4ztaNBFGBb0JrWSdMTAHvhBkmQlUT/43e0IboMK2mPrAZFlvhdcMV8jCnqpYVE9A==}
@@ -3200,6 +3205,10 @@ snapshots:
   basic-auth@2.0.1:
     dependencies:
       safe-buffer: 5.1.2
+
+  better-auth-admin@0.1.2(express@5.2.1):
+    dependencies:
+      express: 5.2.1
 
   better-auth@1.4.13(better-sqlite3@12.6.0)(drizzle-kit@0.31.8)(drizzle-orm@0.45.1(@types/better-sqlite3@7.6.13)(better-sqlite3@12.6.0)(kysely@0.28.9))(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
     dependencies:
