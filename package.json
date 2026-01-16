@@ -1,0 +1,21 @@
+{
+  "name": "better-auth-dashboard",
+  "version": "1.0.0",
+  "description": "Admin dashboard for Better Auth",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --filter client dev",
+    "build": "pnpm --filter client build",
+    "build:adapter": "pnpm --filter better-auth-admin build",
+    "build:all": "pnpm build && pnpm build:adapter",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "better-auth",
+    "admin",
+    "dashboard"
+  ],
+  "author": "",
+  "license": "MIT",
+  "packageManager": "pnpm@10.12.2"
+}
