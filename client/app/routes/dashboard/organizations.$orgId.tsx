@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
+import { OrganizationDetailPluginDisabled } from "../../components/organisations/organization-detail-plugin-disabled";
 import {
   organizationApi,
   type Invitation,
@@ -28,7 +29,7 @@ export default function OrganizationDetailPage() {
   const { orgId } = useParams();
   const navigate = useNavigate();
   const [organization, setOrganization] = useState<FullOrganization | null>(
-    null
+    null,
   );
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -59,8 +60,9 @@ export default function OrganizationDetailPage() {
 
       setOrganization(data as FullOrganization);
     } catch (err) {
+      console.error("Error fetching organization:", err);
       setError(
-        err instanceof Error ? err.message : "Failed to load organization"
+        err instanceof Error ? err.message : "Failed to load organization",
       );
     } finally {
       setIsLoading(false);
@@ -87,7 +89,7 @@ export default function OrganizationDetailPage() {
       navigate("/dashboard/organizations");
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Failed to delete organization"
+        err instanceof Error ? err.message : "Failed to delete organization",
       );
     } finally {
       setActionLoading(null);
@@ -97,7 +99,7 @@ export default function OrganizationDetailPage() {
 
   const handleUpdateMemberRole = async (
     memberId: string,
-    newRole: "owner" | "admin" | "member"
+    newRole: "owner" | "admin" | "member",
   ) => {
     if (!orgId) return;
 
@@ -116,7 +118,7 @@ export default function OrganizationDetailPage() {
       await fetchOrganization();
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Failed to update member role"
+        err instanceof Error ? err.message : "Failed to update member role",
       );
     } finally {
       setActionLoading(null);
@@ -174,7 +176,7 @@ export default function OrganizationDetailPage() {
       await fetchOrganization();
     } catch (err) {
       setInviteError(
-        err instanceof Error ? err.message : "Failed to send invitation"
+        err instanceof Error ? err.message : "Failed to send invitation",
       );
     } finally {
       setActionLoading(null);
@@ -197,7 +199,7 @@ export default function OrganizationDetailPage() {
       await fetchOrganization();
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Failed to cancel invitation"
+        err instanceof Error ? err.message : "Failed to cancel invitation",
       );
     } finally {
       setActionLoading(null);
@@ -275,40 +277,7 @@ export default function OrganizationDetailPage() {
   }
 
   if (error && !organization) {
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center gap-4">
-          <Link
-            to="/dashboard/organizations"
-            className="text-gray-500 hover:text-gray-700"
-          >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          </Link>
-          <h1 className="text-2xl font-bold text-gray-900">Organization</h1>
-        </div>
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-red-700">{error}</p>
-          <button
-            onClick={fetchOrganization}
-            className="mt-2 text-sm text-red-600 hover:text-red-800 underline"
-          >
-            Try again
-          </button>
-        </div>
-      </div>
-    );
+    return <OrganizationDetailPluginDisabled />;
   }
 
   if (!organization) return null;
@@ -490,12 +459,12 @@ export default function OrganizationDetailPage() {
                         onChange={(e) =>
                           handleUpdateMemberRole(
                             member.id,
-                            e.target.value as "owner" | "admin" | "member"
+                            e.target.value as "owner" | "admin" | "member",
                           )
                         }
                         disabled={actionLoading === `role-${member.id}`}
                         className={`px-2 py-1 text-xs font-medium rounded-full border-0 ${getRoleBadgeColor(
-                          member.role
+                          member.role,
                         )} ${
                           actionLoading === `role-${member.id}`
                             ? "opacity-50"
@@ -575,7 +544,7 @@ export default function OrganizationDetailPage() {
                       <td className="px-4 py-3">
                         <span
                           className={`px-2 py-1 text-xs font-medium rounded-full ${getRoleBadgeColor(
-                            invitation.role
+                            invitation.role,
                           )}`}
                         >
                           {invitation.role}
@@ -584,7 +553,7 @@ export default function OrganizationDetailPage() {
                       <td className="px-4 py-3">
                         <span
                           className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusBadgeColor(
-                            invitation.status
+                            invitation.status,
                           )}`}
                         >
                           {invitation.status}

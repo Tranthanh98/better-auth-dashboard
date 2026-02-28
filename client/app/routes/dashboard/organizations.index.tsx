@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router";
+import {
+  ManagementRestrictedHeader,
+  OrganizationPluginDisabledCard,
+} from "../../components/organisations/organization-plugin-disabled";
 import { organizationApi, type Organization } from "../../lib/auth-client";
 
 export function meta() {
@@ -50,7 +54,7 @@ export default function OrganizationsListPage() {
             const { data: fullOrg } = await organizationApi.getFullOrganization(
               {
                 query: { organizationId: org.id },
-              }
+              },
             );
             return {
               ...org,
@@ -59,13 +63,13 @@ export default function OrganizationsListPage() {
           } catch {
             return { ...org, memberCount: 0 };
           }
-        })
+        }),
       );
 
       setOrganizations(orgsWithCounts);
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Failed to load organizations"
+        err instanceof Error ? err.message : "Failed to load organizations",
       );
     } finally {
       setIsLoading(false);
@@ -86,7 +90,7 @@ export default function OrganizationsListPage() {
       result = result.filter(
         (org) =>
           org.name.toLowerCase().includes(query) ||
-          org.slug.toLowerCase().includes(query)
+          org.slug.toLowerCase().includes(query),
       );
     }
 
@@ -130,7 +134,7 @@ export default function OrganizationsListPage() {
 
   const paginatedOrganizations = filteredOrganizations.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
   const totalPages = Math.ceil(filteredOrganizations.length / itemsPerPage);
@@ -205,21 +209,8 @@ export default function OrganizationsListPage() {
   if (error) {
     return (
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Organizations</h1>
-            <p className="text-gray-500 mt-1">Manage organizations</p>
-          </div>
-        </div>
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-red-700">{error}</p>
-          <button
-            onClick={fetchOrganizations}
-            className="mt-2 text-sm text-red-600 hover:text-red-800 underline"
-          >
-            Try again
-          </button>
-        </div>
+        <ManagementRestrictedHeader title="Organizations" />
+        <OrganizationPluginDisabledCard />
       </div>
     );
   }
@@ -422,7 +413,7 @@ export default function OrganizationsListPage() {
               Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
               {Math.min(
                 currentPage * itemsPerPage,
-                filteredOrganizations.length
+                filteredOrganizations.length,
               )}{" "}
               of {filteredOrganizations.length} organizations
             </p>
